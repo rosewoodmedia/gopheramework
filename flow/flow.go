@@ -16,9 +16,27 @@ type FlowOptions struct {
 	// FlowCheckWriteStack determines if stack traces arae written when fl.Check
 	// is called.
 	FlowCheckWriteStack bool
-	// FlowOptions contains options for creating new flow instances. It can be
-	// considered a factory for Flow.
+	// PrintStderrOnAbort determines if an error message gets printed to stderr
+	// when Abort() is called.
 	PrintStderrOnAbort bool
+}
+
+// NewDefault creates a flow that includes stack traces and does not output to
+// stderr automatically.
+func NewDefault(name string) IFlow {
+	return FlowOptions{
+		FlowCheckWriteStack: true,
+		PrintStderrOnAbort:  false,
+	}.New(name)
+}
+
+// NewDebug creates a flow that includes stack traces and will output to stderr
+// whenever the Abort method is called.
+func NewDebug(name string) IFlow {
+	return FlowOptions{
+		FlowCheckWriteStack: true,
+		PrintStderrOnAbort:  false,
+	}.New(name)
 }
 
 // New creates a Flow which aggregates the reciever (options) and is identified
