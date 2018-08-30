@@ -1,6 +1,7 @@
 package flow
 
 import (
+	"github.com/rosewoodmedia/gopheramework/core"
 	"github.com/rosewoodmedia/rwgo/lib/rwstrings"
 )
 
@@ -30,7 +31,7 @@ func (erro LabelledError) Error() string {
 }
 
 func (erro LabelledError) GetText() string {
-	if innerErro, ok := erro.Err.(Error); ok {
+	if innerErro, ok := erro.Err.(core.Error); ok {
 		return erro.Label + ": " + innerErro.GetText()
 	}
 	errstr := erro.Label + ": " + erro.Err.Error() + "\n"
