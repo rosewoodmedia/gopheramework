@@ -25,7 +25,11 @@ type FlowOptions struct {
 // by the specified name. The name parameter does not need to be unique,
 // although it is recommended to enforce an appropriate naming convention in a
 // package where Flow is used.
-func (options FlowOptions) New(name string) *Flow {
+func (options FlowOptions) New(name string) IFlow {
+	return options.new(name)
+}
+
+func (options FlowOptions) new(name string) *Flow {
 	return &Flow{
 		options: options,
 		Name:    name,
@@ -86,6 +90,12 @@ func (fl *Flow) getError() error {
 	return nil
 }
 
+// Add will, if and only if the passed error is not nil, add the error to the
+// flow without wrapping it in a struct or adding any message.
+func (fl *Flow) Add(err error) bool {
+	return fl.addError(err)
+}
+
 // Check will, if and only if the passed error is not nil, wrap the error in
 // an Error struct with the specified label and add it to the list of
 // errors associated with the current segment.
@@ -117,8 +127,8 @@ func (fl *Flow) Must(check bool, message string) bool {
 // that can be used for debugging and analytics. This method should be called on
 // any significant conditional block - that is, any conditional code that could
 // be considered an alternative flow in a use case diagram.
-func (fl *Flow) Flow(name string) *Flow {
-	newFlow := fl.options.New(name)
+func (fl *Flow) Flow(name string) IFlow {
+	newFlow := fl.options.new(name)
 	newFlow.addFlow(fl)
 	return newFlow
 }
